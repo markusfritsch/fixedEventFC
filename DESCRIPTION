@@ -1,0 +1,27 @@
+Package: fixedEventFC
+Type: Package
+Title: Functions and data for fixed event forecasting and forecast window averaging
+Version: 0.1.0
+Date: 2021-10-26
+Authors@R: c(person("Markus", "Fritsch", role = c("aut", "cre"),
+		email = "Markus.Fritsch@uni-Passau.de"),
+	person("Harry", "Haupt", role = c("aut"),
+    email = "Harry.Haupt@uni-Passau.de"),
+	person("Joachim", "Schnurbus", role = c("aut"),
+    email = "Joachim.Schnurbus@uni-Passau.de")    )
+Author: Markus Fritsch [aut, cre], Harry Haupt [aut], Joachim Schnurbus [aut]
+Maintainer: Markus Fritsch <Markus.Fritsch@uni-Passau.de>
+Depends: R (>= 4.1.1)
+Imports: stats (>= 4.1.1),
+Suggests: testthat (>= 3.0.4),
+	R.rsp (>= 0.44.0)
+RdMacros: Rdpack
+LazyData: true
+Description: Functions and data for fixed event forecasting and forecast window averaging.
+License: GPL (>=2)
+URL: https://github.com/markusfritsch/fixedEventFC
+BugReports: https://github.com/markusfritsch/fixedEventFC/issues
+VignetteBuilder: R.rsp
+Encoding: UTF-8
+Classification/JEL: C22, C51, C52, C53, C54
+RoxygenNote: 7.1.1

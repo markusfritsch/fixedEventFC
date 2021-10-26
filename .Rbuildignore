@@ -1,0 +1,10 @@
+.Rhistory
+.Rproj.user
+.fixedEventFC.Rproj
+
+00_old
+
+
+
+^.*\.Rproj$
+^\.Rproj\.user$
