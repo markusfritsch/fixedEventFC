@@ -13,11 +13,11 @@
 #' and employed in \insertCite{Fritsch2024}{fixedEventFC} which also
 #' provides more details on the different variables.
 #'
-#' @name datE
+#' @name datRes
 #'
 #' @docType data
 #'
-#' @usage data(datE)
+#' @usage data(datRes)
 #'
 #' @format A dataset with 81 rows and 20 variables containing:
 #' \describe{
@@ -50,8 +50,8 @@
 #'
 #' @examples
 #' \dontrun{
-#'   data(datE, package = "fixedEventFC")
-#'   nrow(datE)
+#'   data(datRes, package = "fixedEventFC")
+#'   nrow(datRes)
 #' }
 #'
 NULL
