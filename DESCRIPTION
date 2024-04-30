@@ -1,8 +1,8 @@
 Package: fixedEventFC
 Type: Package
-Title: Functions and data for fixed event forecasting and forecast window averaging
+Title: Functions and data for investigating the efficiency of poll-based multi-period forecasting systems for German state elections
 Version: 0.1.0
-Date: 2021-10-26
+Date: 2024-04-30
 Authors@R: c(person("Markus", "Fritsch", role = c("aut", "cre"),
 		email = "Markus.Fritsch@uni-Passau.de"),
 	person("Harry", "Haupt", role = c("aut"),
@@ -17,11 +17,11 @@ Suggests: testthat (>= 3.0.4),
 	R.rsp (>= 0.44.0)
 RdMacros: Rdpack
 LazyData: true
-Description: Functions and data for fixed event forecasting and forecast window averaging.
+Description: Functions and data for investigating the efficiency of poll-based multi-period forecasting systems for German state elections.
 License: GPL (>=2)
 URL: https://github.com/markusfritsch/fixedEventFC
 BugReports: https://github.com/markusfritsch/fixedEventFC/issues
 VignetteBuilder: R.rsp
 Encoding: UTF-8
-Classification/JEL: C22, C51, C52, C53, C54
-RoxygenNote: 7.1.1
+Classification/JEL: C18, C32, C33, C52, C53, D72
+RoxygenNote: 7.2.3
