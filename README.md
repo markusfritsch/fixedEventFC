@@ -1,7 +1,5 @@
-# fixedEventFC: Functions and data for fixed event foecasting and forecast averaging
-R functions and datasets to reproduce the results in Fritsch, Haupt, and Schnurbus (2021a): Fixed event forecasting at multiple lead times: The case for forecast window averaging. _Working Paper_.
-
-Details on the datasets are provided in Fritsch, Haupt, and Schnurbus (2021b): Data for fixed event foecasting and forecast averaging of German state elections, _Working Paper_.
+# fixedEventFC: Functions and data for investigating the efficiency of poll-based multi-period forecasting systems for German state elections
+R functions and datasets to reproduce the results in Fritsch, Haupt, and Schnurbus (2024): Efficiency of poll-based multi-period forecasting systems for German state elections. _Working Paper_.
 
 To install the package please use:
 ```{r}
