@@ -19,6 +19,7 @@ library(quantreg)
 library(devtools)
 
 install_github("markusfritsch/fixedEventFC")
+library(fixedEventFC)
 
 
 rm(list = ls())
