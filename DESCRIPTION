@@ -11,8 +11,8 @@ Authors@R: c(person("Markus", "Fritsch", role = c("aut", "cre"),
     email = "Joachim.Schnurbus@uni-Passau.de")    )
 Author: Markus Fritsch [aut, cre], Harry Haupt [aut], Joachim Schnurbus [aut]
 Maintainer: Markus Fritsch <Markus.Fritsch@uni-Passau.de>
-Depends: R (>= 4.1.1)
-Imports: stats (>= 4.1.1),
+Depends: R (>= 4.3.0),
+  Rdpack (>= 2.6)
 Suggests: testthat (>= 3.0.4),
 	R.rsp (>= 0.44.0)
 RdMacros: Rdpack

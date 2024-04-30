@@ -1,14 +1,24 @@
-bibentry(bibtype = "Article",
+bibentry(bibtype = "unpublished",
 	title = ("Efficiency of poll-based multi-period forecasting systems for German state elections"),
 	author = c(person("Markus", "Fritsch"),
 		person("Harry", "Haupt"),
 		person("Joachim", "Schnurbus")),
-	journal = ("Working Paper"),
-	%year = ("2024"),
-	%volume = (""),
-  %number = (""),
-  %pages = (""),
-	%doi = (""),
-	%url = (""),
+	note = ("Working Paper"),
+	year = ("2024"),
 	header = "To cite the dataset in publication, please use:"
 	)
+
+#bibentry(bibtype = "Article",
+#	title = ("Efficiency of poll-based multi-period forecasting systems for German state elections"),
+#	author = c(person("Markus", "Fritsch"),
+#		person("Harry", "Haupt"),
+#		person("Joachim", "Schnurbus")),
+#	journal = ("Working Paper"),
+#	year = ("2024"),
+#	volume = (""),
+# number = (""),
+#  pages = (""),
+#	doi = (""),
+#	url = (""),
+#	header = "To cite the dataset in publication, please use:"
+#	)
