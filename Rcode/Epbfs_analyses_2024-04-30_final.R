@@ -15,6 +15,10 @@ library(pdynmc)
 library(moments)
 #	install.packages("quantreg")
 library(quantreg)
+#	install.packages("devtools")
+library(devtools)
+
+install_github("markusfritsch/fixedEventFC")
 
 
 rm(list = ls())
@@ -28,8 +32,15 @@ rm(list = ls())
 
 
 
-datE		<- readRDS("datRes.rds")
-datP		<- readRDS("datPolls.rds")
+
+
+data(datRes)
+datE		<- datRes
+data(datPolls)
+datP		<- datPolls
+
+#datE		<- readRDS("datRes.rds")
+#datP		<- readRDS("datPolls.rds")
 
 
 
