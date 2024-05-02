@@ -4,13 +4,9 @@
 ############################################################
 
 ###
-###	Load packages, clear workspace, assign work directory, load data
+###	Load packages (install first) and github repository
 ###
 
-#	install.packages("plm")
-library(plm)
-#	install.packages("pdynmc")
-library(pdynmc)
 #	install.packages("moments")
 library(moments)
 #	install.packages("quantreg")
@@ -18,32 +14,34 @@ library(quantreg)
 #	install.packages("devtools")
 library(devtools)
 
+
+
 install_github("markusfritsch/fixedEventFC")
 library(fixedEventFC)
 
+
+
+
+
+###
+###	Clear workspace, load and rename data
+###
 
 rm(list = ls())
 
 
 
-#	setwd("C:/Work/Research/Papers/Wahlen/R")
-#	setwd("C:/Work/Research/Papers/Wahlen/R/pre_2024-02-14")	# for code checks
-	setwd("D:/Work/20_Projekte/400_Elections/R")
-
-
-
-
-
+###	Data on election outcomes
 
 data(datRes)
 datE		<- datRes
+
+
+
+###	Data on election polls
+
 data(datPolls)
 datP		<- datPolls
-
-#datE		<- readRDS("datRes.rds")
-#datP		<- readRDS("datPolls.rds")
-
-
 
 
 
@@ -112,25 +110,11 @@ dat[-1, paste(party.set, ".rev", sep = "")]		<- dat[2:nrow(dat), party.set] - da
 
 
 
-
-
-
-
-
-
-
-
-
-
-###
-###	Plots
-###
-
 dat.input	<- dat[-1, paste(party.set, ".rev", sep = "")]
 
 dat.plot	<- dat.input
 for(co in 1:ncol(dat.input)){
-  dat.plot[, co]	<- jitter(dat.input[, co])
+  dat.plot[, co]	<- jitter(dat.input[, co])	# jitter the data
 }
 
 
@@ -154,6 +138,13 @@ for(el in 1:length(party.set)){
   datLo		<- rbind(datLo, datLo.temp)
 }
 
+
+
+
+###
+###	Estimate specifications for drawing fitted lines
+###
+
 reg.within	<- lm(formula = party.rev ~ party.rev.L1 + i.name - 1, data = datLo)
 coe	<- coef(reg.within)
 
@@ -161,12 +152,15 @@ coe	<- coef(reg.within)
 reg.slope	<- lm(formula = party.rev ~ party.rev.L1*i.name - party.rev.L1 - 1, data = datLo)
 coe.s	<- coef(reg.slope)
 
-
-reg.EQ4	<- lm(formula = party.rev ~ party.L1 + party.L2, data = datLo)		# EQ.(4) of Clements (2007)
-
-reg.DF	<- lm(formula = party.rev ~ party.L1, data = datLo)		# Dickey-Fuller-Test
+LA	<- 1		# which lag
+reg.pooled	<- lm(unlist(dat.input[-(1:LA), ]) ~ unlist(dat.input[-(nrow(dat.input) + 1 - 1:LA), ]))
 
 
+
+
+###
+###	Create plots
+###
 
 #	pdf(paste("AR1_revisions_LS_", BL.temp, "-", elCycle.temp, ".pdf", sep = ""), height = 6, width = 8)
 
@@ -177,11 +171,6 @@ y.limits	<- x.limits
 
 
 par(mfrow = c(2, 2), mgp = c(2, 1, 0), mai = c(0.5, 0.5, 0.2, 0.05))
-
-#	for(LA in 1:4){
-LA	<- 1		# which lag
-
-
 
 matplot(
   x		= dat.plot[-(nrow(dat.plot) + 1 - 1:LA), ],
@@ -242,8 +231,6 @@ for(co in 1:ncol(dat.input)){
 
 ###	Equation (20), Pooled (i.e., identical intercept, identical slope)
 
-reg.temp	<- lm(unlist(dat.input[-(1:LA), ]) ~ unlist(dat.input[-(nrow(dat.input) + 1 - 1:LA), ]))
-
 matplot(
   x		= dat.plot[-(nrow(dat.plot) + 1 - 1:LA), ],
   y		= dat.plot[-(1:LA), ],
@@ -254,7 +241,7 @@ matplot(
 )
 abline(h = 0, v = 0, col = "grey70", lty = 3)
 
-abline(reg.temp, lwd = 2, col = "darkorange")
+abline(reg.pooled, lwd = 2, col = "darkorange")
 
 #	}
 
@@ -283,7 +270,6 @@ abline(reg.temp, lwd = 2, col = "darkorange")
 BL.set	<- sort(unique(datP$BL))
 
 range(datP$PollPublished)
-
 date.vec	<- seq(as.Date("2000-01-01"), as.Date("2024-12-31"), by="days")
 
 
@@ -371,6 +357,36 @@ for(BL.id in 1:length(BL.set)){
 
 
 
+############################################################
+###	Figures in text in subsection 5.1
+############################################################
+
+###
+###	Poll type
+###
+
+nrow(datP)								#all available election polls
+datP.tmp		<- datP[datP$daysToEl <= 365, ]	#all election polls at most 365 days ahead of election
+nrow(datP.tmp)
+
+table(datP.tmp$PollType, useNA = "always")/nrow(datP.tmp)*100
+
+
+
+###
+###	Poll completion/publication time 
+###
+
+summary(datP.tmp$PollDays)
+summary(datP.tmp$DaysTillPollPublished)
+
+
+
+
+
+
+
+
 
 
 
@@ -389,46 +405,63 @@ nrow(datP)								#all available election polls
 datP.tmp		<- datP[datP$daysToEl <= 365, ]	#all election polls at most 365 days ahead of election
 nrow(datP.tmp)
 
-datP.tmp$Institut[grepl(datP.tmp$Institut, pattern = "IfM")]							<- "IfM"
-datP.tmp$Institut[grepl(datP.tmp$Institut, pattern = "GESS")]							<- "GESS"
-datP.tmp$Institut[datP.tmp$Institut == "INFO GmbH"]								<- "Info GmbH"
-datP.tmp$Institut[grepl(datP.tmp$Institut, pattern = "Aproxima")]						<- "Aproxima"
-datP.tmp$Institut[grepl(datP.tmp$Institut, pattern = "FGW")]							<- "FGW"
+
+
+###	Adjust ambiguous names/abbreviations
+
+datP.tmp$Institut[grepl(datP.tmp$Institut, pattern = "IfM")]			<- "IfM"
+datP.tmp$Institut[grepl(datP.tmp$Institut, pattern = "GESS")]			<- "GESS"
+datP.tmp$Institut[datP.tmp$Institut == "INFO GmbH"]					<- "Info GmbH"
+datP.tmp$Institut[grepl(datP.tmp$Institut, pattern = "Aproxima")]			<- "Aproxima"
+##	datP.tmp$Institut[grepl(datP.tmp$Institut, pattern = "FGW")]			<- "FGW"
 datP.tmp$Institut[grepl(datP.tmp$Institut, pattern = "Uni") |
-		grepl(datP.tmp$Institut, pattern = "TU")]							<- "University"
+		grepl(datP.tmp$Institut, pattern = "TU")]					<- "University"
 datP.tmp$Institut[grepl(datP.tmp$Institut, pattern = "Infratest") |
 		grepl(datP.tmp$Institut, pattern = "TNS") |
-		grepl(datP.tmp$Institut, pattern = "dimap")]							<- "Infratest"
-datP.tmp$Institut[datP.tmp$Institut == "Emnid"]									<- "Verian"
+		grepl(datP.tmp$Institut, pattern = "dimap")]				<- "Infratest"
+datP.tmp$Institut[datP.tmp$Institut == "Emnid"]						<- "Verian"
 datP.tmp$Institut[grepl(datP.tmp$Institut, pattern = "Forschungsgruppe") |
 		grepl(datP.tmp$Institut, pattern = "Forschungs-gruppe") |
-		grepl(datP.tmp$Institut, pattern = "Forsch’gr.")]						<- "FGW"
+		grepl(datP.tmp$Institut, pattern = "Forsch’gr.")]			<- "FGW"
 datP.tmp$Institut[datP.tmp$Institut %in% names(table(datP.tmp$Institut))[table(datP.tmp$Institut) < 20] ]	<- "Other"
+
+
+
+
+###	Create table
 
 mat	<- data.frame(matrix(NA, nrow = length(unique(datP.tmp$Institut)), ncol = 4))
 colnames(mat)	<- c("Acronym", "Opinion research institution/company", "Number of polls", "Average respondents")
 
-for(j in 1:length(unique(datP.tmp$Institut))){
+Institute.set	<- sort(unique(datP.tmp$Institut))
 
-  mat[j, 1]	<- sort(unique(datP.tmp$Institut))[j]
-  mat[, 2]	<- c("Forschungsgruppe Wahlen e.V.", "Forsa Gesellschaft für Sozialforschung und statistische Analysen GmbH",
-			"GMS Dr. Jung GmbH",
-			"Leipziger Institut für Marktforschung", "Infratest dimap Gesellschaft für Trend- und Wahlforschung mbH",
-			"INSA-Consulere GmbH", "Other", "Institut für Wahlforschung und Sozialwissenschaft GmbH", "Kantar GmbH",
-			"YouGov Deutschland GmbH")
-  mat[j, 3]	<- sum(datP.tmp$Institut == unique(datP.tmp$Institut)[j])
-  mat[j, 4]	<- round(mean(datP.tmp[datP.tmp$Institut == unique(datP.tmp$Institut)[j], "PollParticipants"], na.rm = TRUE), digits = 0)
-#  mat[j, 5]	<- min(datP.tmp[datP.tmp$Institut == unique(datP.tmp$Institut)[j], "date"])
-#  mat[j, 6]	<- max(datP.tmp[datP.tmp$Institut == unique(datP.tmp$Institut)[j], "date"])
+mat[, 1]		<- Institute.set
+mat[, 2]		<- c(
+  "Forschungsgruppe Wahlen e.V.", 
+  "Forsa Gesellschaft für Sozialforschung und statistische Analysen GmbH",
+  "GMS Dr. Jung GmbH",
+  "Leipziger Institut für Marktforschung", 
+  "Infratest dimap Gesellschaft für Trend- und Wahlforschung mbH",
+  "INSA-Consulere GmbH", 
+  "Other", 
+  "Institut für Wahlforschung und Sozialwissenschaft GmbH", 
+  "Kantar GmbH",
+  "YouGov Deutschland GmbH"
+)
 
+for(j in 1:length(Institute.set)){
+  mat[j, 3]	<- sum(datP.tmp$Institut == Institute.set[j])
+  mat[j, 4]	<- round(mean(datP.tmp[datP.tmp$Institut == Institute.set[j], "PollParticipants"], na.rm = TRUE), digits = 0)
 }
-mat
+
+#	mat				# in alphabetical order
+mat[c(1:6, 8:10, 7), ]	# alphabetical, but "Other" at bottom position
 
 
 
 
 ###
-###	Table 3
+###	Table 3 
 ###
 
 colSums(!is.na(datE[,c(5:10)] >= 5.00))		# Elections participated
@@ -515,8 +548,8 @@ col.set.orig		<- c("#000000", "#E3000F", "#64A12D", "#FFD600", "#6D00CC", "#009E
 
 
 
-	lambda_max		<- 365
-#	lambda_max		<- 180
+lambda_max		<- 365
+
 lambda1_gt_max	<- min(datP[datP$BL == BL.temp & datP$PollElCycle == elCycle.temp & datP$daysToEl >= lambda_max, "daysToEl"])
 
 
@@ -814,7 +847,7 @@ switch(
 
 
 	lambda_max		<- 365
-#	lambda_max		<- 180
+
 lambda1_gt_max	<- min(datP[datP$BL == BL.temp & datP$PollElCycle == elCycle.temp & datP$daysToEl >= lambda_max, "daysToEl"])
 
 
@@ -985,13 +1018,9 @@ elCycle.set		<- sort(unique(datP[datP$BL == BL.temp, "PollElCycle"]))
 	for(elCycle.temp in elCycle.set){
 
 #	BL.temp		<- "BY"; 	elCycle.temp	<- 4
-#	BL.temp		<- "BE";  	elCycle.temp	<- 3
-#	BL.temp		<- "NW"; 	elCycle.temp	<- 1
-#	BL.temp		<- "HB";	elCycle.temp	<- 2
-
 
 	lambda_max		<- 365
-#	lambda_max		<- 180
+
 lambda1_gt_max	<- min(datP[datP$BL == BL.temp & datP$PollElCycle == elCycle.temp & datP$daysToEl >= lambda_max, "daysToEl"])
 
 
@@ -1130,13 +1159,10 @@ elCycle.set		<- sort(unique(datP[datP$BL == BL.temp, "PollElCycle"]))
 	for(elCycle.temp in elCycle.set){
 
 #	BL.temp		<- "BY"; 	elCycle.temp	<- 4
-#	BL.temp		<- "BE";  	elCycle.temp	<- 3
-#	BL.temp		<- "NW"; 	elCycle.temp	<- 1
-#	BL.temp		<- "HB";	elCycle.temp	<- 2
 
 
 	lambda_max		<- 365
-#	lambda_max		<- 180
+
 lambda1_gt_max	<- min(datP[datP$BL == BL.temp & datP$PollElCycle == elCycle.temp & datP$daysToEl >= lambda_max, "daysToEl"])
 
 
