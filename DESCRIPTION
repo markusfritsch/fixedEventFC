@@ -2,7 +2,7 @@ Package: fixedEventFC
 Type: Package
 Title: Functions and data for investigating the efficiency of poll-based multi-period forecasting systems for German state elections
 Version: 0.1.0
-Date: 2024-04-30
+Date: 2024-05-21
 Authors@R: c(person("Markus", "Fritsch", role = c("aut", "cre"),
 		email = "Markus.Fritsch@uni-Passau.de"),
 	person("Harry", "Haupt", role = c("aut"),
